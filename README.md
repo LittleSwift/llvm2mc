@@ -1,0 +1,127 @@
+# llvm2mc
+![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-7.6%25-yellow)
+![Command Coverage](https://img.shields.io/badge/Command%20Coverage-0%25-red)
+
+**llvm2mc** is a project that compiles LLVM IR into a Minecraft datapack. It translates LLVM instructions into Minecraft functions, enabling you to run LLVM-based programs inside Minecraft.
+
+## Supported Instructions
+
+<details>
+<summary>Terminator Instructions</summary>
+
+- [x] `ret` Instruction
+- [x] `br` Instruction
+- [ ] `switch` Instruction
+- [ ] `indirectbr` Instruction
+- [ ] `invoke` Instruction
+- [ ] `callbr` Instruction
+- [ ] `resume` Instruction
+- [ ] `catchswitch` Instruction
+- [ ] `catchret` Instruction
+- [ ] `cleanupret` Instruction
+- [ ] `unreachable` Instruction
+
+</details>
+
+<details>
+<summary>Unary Operations</summary>
+
+- [ ] `fneg` Instruction
+
+</details>
+
+<details>
+<summary>Binary Operations</summary>
+
+- [x] `add` Instruction
+- [ ] `fadd` Instruction
+- [x] `sub` Instruction
+- [ ] `fsub` Instruction
+- [ ] `mul` Instruction
+- [ ] `fmul` Instruction
+- [ ] `udiv` Instruction
+- [ ] `sdiv` Instruction
+- [ ] `fdiv` Instruction
+- [ ] `urem` Instruction
+- [ ] `srem` Instruction
+- [ ] `frem` Instruction
+
+</details>
+
+<details>
+<summary>Bitwise Binary Operations</summary>
+
+- [ ] `shl` Instruction
+- [ ] `lshr` Instruction
+- [ ] `ashr` Instruction
+- [ ] `and` Instruction
+- [ ] `or` Instruction
+- [ ] `xor` Instruction
+
+</details>
+
+<details>
+<summary>Vector Operations</summary>
+
+- [ ] `extractelement` Instruction
+- [ ] `insertelement` Instruction
+- [ ] `shufflevector` Instruction
+
+</details>
+
+<details>
+<summary>Aggregate Operations</summary>
+
+- [ ] `extractvalue` Instruction
+- [ ] `insertvalue` Instruction
+
+</details>
+
+<details>
+<summary>Memory Access and Addressing Operations</summary>
+
+- [x] `alloca` Instruction
+- [ ] `load` Instruction
+- [ ] `store` Instruction
+- [ ] `fence` Instruction
+- [ ] `cmpxchg` Instruction
+- [ ] `atomicrmw` Instruction
+- [ ] `getelementptr` Instruction
+
+</details>
+
+<details>
+<summary>Conversion Operations</summary>
+
+- [ ] `trunc .. to` Instruction
+- [ ] `zext .. to` Instruction
+- [ ] `sext .. to` Instruction
+- [ ] `fptrunc .. to` Instruction
+- [ ] `fpext .. to` Instruction
+- [ ] `fptoui .. to` Instruction
+- [ ] `fptosi .. to` Instruction
+- [ ] `uitofp .. to` Instruction
+- [ ] `sitofp .. to` Instruction
+- [ ] `ptrtoint .. to` Instruction
+- [ ] `ptrtoaddr .. to` Instruction
+- [ ] `inttoptr .. to` Instruction
+- [ ] `bitcast .. to` Instruction
+- [ ] `addrspacecast .. to` Instruction
+
+</details>
+
+<details>
+<summary>Other Operations</summary>
+
+- [ ] `icmp` Instruction
+- [ ] `fcmp` Instruction
+- [ ] `phi` Instruction
+- [ ] `select` Instruction
+- [ ] `freeze` Instruction
+- [ ] `call` Instruction
+- [ ] `va_arg` Instruction
+- [ ] `landingpad` Instruction
+- [ ] `catchpad` Instruction
+- [ ] `cleanuppad` Instruction
+
+</details>
