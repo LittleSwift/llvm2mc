@@ -1,9 +1,11 @@
 # llvm2mc
-![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-7.6%25-yellow)
+![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-9.1%25-yellow)
 ![Command Coverage](https://img.shields.io/badge/Command%20Coverage-0%25-red)
 
 **llvm2mc** is a project that compiles LLVM IR into a Minecraft datapack. It translates LLVM instructions into Minecraft functions, enabling you to run LLVM-based programs inside Minecraft.
 
+## Development Status
+We are currently working on supporting Clang IR subset of LLVM IR, which is much easier to implement in Minecraft.
 ## Supported Instructions
 
 <details>
@@ -82,7 +84,7 @@
 
 - [x] `alloca` Instruction
 - [ ] `load` Instruction
-- [ ] `store` Instruction
+- [x] `store` Instruction (Clang IR subset)
 - [ ] `fence` Instruction
 - [ ] `cmpxchg` Instruction
 - [ ] `atomicrmw` Instruction
@@ -125,3 +127,7 @@
 - [ ] `cleanuppad` Instruction
 
 </details>
+
+## Tips
+- All Minecraft native functions can be imported from `llvm2mc/mcfunc.h`.
+- We suggest using `clang -c -emit-llvm -Xclang -disable-llvm-passes -target armv7-unknown-unknown -O0 foo.cpp -o foo.bc` to compile your code when you are using c++.

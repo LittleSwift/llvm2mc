@@ -8,16 +8,9 @@ find_package(LLVM REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "LLVM include dirs: ${LLVM_INCLUDE_DIRS}")
 
-add_executable(llvm2mc main.cpp
-        instructions/alloca.h
-        instructions/binaryOperator.h
-        instructions/br.h
-        instructions/ret.h
-        predefined/abort.h
-        stringUtils.h
-        const.h
-        constConversion.h
-)
+file(GLOB_RECURSE SRC_FILES src/*.cpp src/*.h)
+
+add_executable(llvm2mc ${SRC_FILES})
 target_include_directories(llvm2mc PRIVATE ${LLVM_INCLUDE_DIRS})
 target_link_libraries(llvm2mc PRIVATE LLVMCore LLVMBitReader LLVMIRReader)
 

@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "../stringUtils.h"
+#include "../utils/stringUtils.h"
 
 inline std::string mAbort(const std::string &message) {
     std::ostringstream commands;
