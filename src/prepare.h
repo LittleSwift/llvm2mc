@@ -24,6 +24,6 @@ inline void prepare() {
     entryFile.close();
 
     std::ofstream storeFile("output/_store.mcfunction");
-    storeFile<<"$data modify storage llvm2mc:llvm2mc memory[$(ptr)] set from store\n";
+    storeFile<<"$data modify storage llvm2mc:llvm2mc memory[$(ptr)] set from llvm2mc:llvm2mc store\n";
     storeFile.close();
 }
