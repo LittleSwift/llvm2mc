@@ -14,6 +14,9 @@ add_executable(llvm2mc ${SRC_FILES})
 target_include_directories(llvm2mc PRIVATE ${LLVM_INCLUDE_DIRS})
 target_link_libraries(llvm2mc PRIVATE LLVMCore LLVMBitReader LLVMIRReader)
 
+file(GLOB_RECURSE HEADER_FILES include/*.h)
+add_library(headers INTERFACE ${HEADER_FILES})
+
 install(TARGETS llvm2mc
         RUNTIME DESTINATION bin
 )

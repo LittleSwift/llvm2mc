@@ -18,7 +18,7 @@ inline std::string handleStore(const llvm::Function &func, const llvm::StoreInst
         commands << "data modify storage llvm2mc::llvm2mc store set from "
                  << valueToString(value) << "\n";
     }
-    if (type->isIntegerTy() && type->getIntegerBitWidth() == 64) {
+    if (type->isIntegerTy() && type->getIntegerBitWidth() == 64 || type->isDoubleTy()) {
         commands << "execute store result score store register run data get llvm2mc::llvm2mc store[0]\n";
         commands << "execute store result score ptr register run data get llvm2mc::llvm2mc "
                  << valueToString(ptr) << "\n";
@@ -37,7 +37,7 @@ inline std::string handleStore(const llvm::Function &func, const llvm::StoreInst
             commands << "scoreboard players add ptr register 1\n";
             commands << "scoreboard players operation store register /= 256 const\n";
         }
-    } else if (type->isPointerTy() || type->isIntegerTy() && type->getIntegerBitWidth() == 32) {
+    } else if (type->isPointerTy() || type->isIntegerTy() && type->getIntegerBitWidth() == 32 || type->isFloatTy()) {
         commands << "execute store result score store register run data get llvm2mc::llvm2mc store\n";
         commands << "execute store result score ptr register run data get llvm2mc::llvm2mc "
                  << valueToString(ptr) << "\n";
