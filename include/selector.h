@@ -4,7 +4,8 @@
 #include <string>
 
 namespace minecraft::selector {
-    enum Sort { Nearest, Furthest, Random, Arbitrary};
+    enum SelectorType: uint8_t { p, r, a, e, s, n };
+    enum Sort: uint8_t { Nearest , Furthest, Random, Arbitrary };
     template<typename T>
     class Exclude {
     public:
@@ -90,6 +91,7 @@ namespace minecraft::selector {
 
     class Selector {
     public:
+        SelectorType type;
         std::optional<Exclude<std::string>> name;
         std::optional<DoubleRange> distance;
         std::optional<IntRange> level;
@@ -107,36 +109,10 @@ namespace minecraft::selector {
         std::optional<Exclude<std::string>> team;
         std::optional<Exclude<std::string>> tag;
         std::optional<Exclude<std::string>> nbt; //TODO nbt
-        std::optional<std::map<std::string,IntRange>> scores;
-        std::optional<std::map<std::string,std::variant<bool, std::map<std::string, bool>>>> advancements;
+        std::optional<std::map<std::string, IntRange>> scores;
+        std::optional<std::map<std::string, std::variant<bool, std::map<std::string, bool>>>> advancements;
         std::optional<Exclude<std::string>> predicate;
 
-    protected:
-        Selector() {}
-
-    };
-    class PSelector: public Selector {
-    public:
-        PSelector() {}
-    };
-    class RSelector: public Selector {
-    public:
-        RSelector() {}
-    };
-    class ASelector: public Selector {
-    public:
-        ASelector() {}
-    };
-    class ESelector: public Selector {
-    public:
-        ESelector() {}
-    };
-    class SSelector: public Selector {
-    public:
-        SSelector() {}
-    };
-    class NSelector: public Selector {
-    public:
-        NSelector() {}
+        explicit Selector(const SelectorType type) : type(type) {}
     };
 }
