@@ -129,5 +129,6 @@ We are currently working on supporting Clang IR subset of LLVM IR, which is much
 </details>
 
 ## Tips
+- Please note that llvm2mc only supports LLVM libc++ at 32 bit. This means you should not compile any code using MSVC STL or gcc libstdc++.
 - All Minecraft native functions can be imported from `llvm2mc/mcfunc.h`.
-- We suggest using `clang -c -emit-llvm -Xclang -disable-llvm-passes -O0 foo.cpp -o foo.bc` to compile your code when you are using c++.
+- We suggest using `clang -c -emit-llvm -Xclang -disable-llvm-passes -O0 -target i386-apple-darwin -std=c++20 foo.cpp -o foo.bc` to compile your code when you are using c++.
