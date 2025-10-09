@@ -4,6 +4,7 @@
 
 #include "data.h"
 #include "../const.h"
+#include "../utils/misc.h"
 #include "../utils/valueConversion.h"
 
 class ScoreField ;
@@ -58,12 +59,15 @@ public:
         return "scoreboard players remove " + name + " " + board + " " + std::to_string(arg) + "\n";
     }
     std::string operator*(const int arg) const {
+        assert(defined(arg));
         return "scoreboard players operation " + name + " " + board + " *= " + std::to_string(arg) + " const\n";
     }
     std::string operator/(const int arg) const {
+        assert(defined(arg));
         return "scoreboard players operation " + name + " " + board + " /= " + std::to_string(arg) + " const\n";
     }
     std::string operator%(const int arg) const {
+        assert(defined(arg));
         return "scoreboard players operation " + name + " " + board + " %= " + std::to_string(arg) + " const\n";
     }
 

@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "const.h"
+#include "predefined/data.h"
 #include "utils/stringUtils.h"
 
 inline void prepare() {
@@ -15,8 +16,9 @@ inline void prepare() {
     entryFile << "scoreboard players set stackSize register " << kStackSize << "\n";
 
     entryFile << "scoreboard objectives add const dummy\n";
-    entryFile << "scoreboard players set const 0 0\n";
-    entryFile << "scoreboard players set const 256 256\n";
+    for (int number: kDefinedConsts) {
+        entryFile << (number >> ScoreField(std::to_string(number), "const"));
+    }
 
     entryFile << "data modify storage llvm2mc:llvm2mc stack insert -1 value {}\n";
     entryFile << "function llvm2mc:main\n";

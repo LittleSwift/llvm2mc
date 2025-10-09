@@ -5,7 +5,6 @@
 #include <llvm/IR/Value.h>
 
 #include "../predefined/data.h"
-#include "../utils/valueConversion.h"
 
 inline std::string handleStore(const llvm::Function &func, const llvm::StoreInst &inst) {
     std::ostringstream commands;
