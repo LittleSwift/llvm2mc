@@ -5,14 +5,14 @@
 #include <llvm/IR/Value.h>
 
 #include "../predefined/abort.h"
+#include "../predefined/data.h"
 #include "../utils/valueConversion.h"
 
 inline std::string handleAlloca(const llvm::Function &func, const llvm::AllocaInst &inst) {
     std::ostringstream commands;
-    commands << "execute store result storage llvm2mc:llvm2mc "
-             << valueToString(inst) << " run scoreboard players get stackTop register\n";
-    commands << "run scoreboard players add stackTop register "
-          << inst.getAllocationSize(inst.getDataLayout()).value() << "\n";
+    const ScoreField stackTop("stackTop", "register");
+    commands << (stackTop >> DataField(inst));
+    commands << (stackTop + inst.getAllocationSize(inst.getDataLayout()).value());
     if (debug) {
         commands << "execute if score stackTop register > stackSize register run " << mAbort("Reached max stack size.");
     }

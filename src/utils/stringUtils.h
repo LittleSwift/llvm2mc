@@ -20,7 +20,7 @@ inline std::string sha256Hash(const std::string& input) {
 
     std::stringstream ss;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
-        ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(hash[i]);
     }
     return ss.str();
 }
@@ -42,7 +42,7 @@ inline std::string standardizeName(std::string name) {
 std::string inline escapeQuotes(const std::string &input) {
     std::string result;
     result.reserve(input.size());
-    for (char c : input) {
+    for (const char c : input) {
         if (c == '"') {
             result += "\\\"";
         } else {

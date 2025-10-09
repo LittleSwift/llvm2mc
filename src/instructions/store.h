@@ -4,6 +4,7 @@
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/Value.h>
 
+#include "../predefined/data.h"
 #include "../utils/valueConversion.h"
 
 inline std::string handleStore(const llvm::Function &func, const llvm::StoreInst &inst) {
@@ -11,56 +12,57 @@ inline std::string handleStore(const llvm::Function &func, const llvm::StoreInst
     const llvm::Value *value = inst.getValueOperand();
     const llvm::Type *type = value -> getType();
     const llvm::Value *ptr = inst.getPointerOperand();
+    const DataField storeField("store");
+    const ScoreField storeBoard("store", "register");
+    const DataField ptrField(ptr);
+    const ScoreField ptrBoard("ptr", "register");
+    const DataField argsPtrField("args.ptr");
     if (llvm::isa<llvm::Constant>(value)) {
         commands << "data modify storage llvm2mc:llvm2mc store set value "
                  << constantToString(llvm::cast<llvm::Constant>(value)) << "\n";
     } else {
-        commands << "data modify storage llvm2mc:llvm2mc store set from "
-                 << valueToString(value) << "\n";
+        commands << (DataField(value) >> storeField);
     }
     if (type->isIntegerTy() && type->getIntegerBitWidth() == 64 || type->isDoubleTy()) {
-        commands << "execute store result score store register run data get llvm2mc:llvm2mc store[0]\n";
-        commands << "execute store result score ptr register run data get llvm2mc:llvm2mc "
-                 << valueToString(ptr) << "\n";
+        commands << (storeField[0] >> storeBoard);
+        commands << (ptrField >> ptrBoard);
         for (int i = 0; i < 4; i++) {
-            commands << "execute store result storage llvm2mc:llvm2mc args.ptr int 1 run scoreboard players get ptr register\n";
-            commands << "execute store result storage llvm2mc:llvm2mc store int 1 run scoreboard players get store register\n";
+            commands << (ptrBoard >> argsPtrField);
+            commands << (storeBoard >> storeField);
             commands << "function llvm2mc:_store with storage llvm2mc:llvm2mc args\n";
-            commands << "scoreboard players add ptr register 1\n";
-            commands << "scoreboard players operation store register /= 256 const\n";
+            commands << (ptrBoard + 1);
+            commands << (storeBoard / 256);
         }
-        commands << "execute store result score store register run data get llvm2mc:llvm2mc store[1]\n";
+        commands << (storeField[1] >> storeBoard);
         for (int i = 0; i < 4; i++) {
-            commands << "execute store result storage llvm2mc:llvm2mc args.ptr int 1 run scoreboard players get ptr register\n";
-            commands << "execute store result storage llvm2mc:llvm2mc store int 1 run scoreboard players get store register\n";
+            commands << (ptrBoard >> argsPtrField);
+            commands << (storeBoard >> storeField);
             commands << "function llvm2mc:_store with storage llvm2mc:llvm2mc args\n";
-            commands << "scoreboard players add ptr register 1\n";
-            commands << "scoreboard players operation store register /= 256 const\n";
+            commands << (ptrBoard + 1);
+            commands << (storeBoard / 256);
         }
     } else if (type->isPointerTy() || type->isIntegerTy() && type->getIntegerBitWidth() == 32 || type->isFloatTy()) {
-        commands << "execute store result score store register run data get llvm2mc:llvm2mc store\n";
-        commands << "execute store result score ptr register run data get llvm2mc:llvm2mc "
-                 << valueToString(ptr) << "\n";
+        commands << (storeField >> storeBoard);
+        commands << (ptrField >> ptrBoard);
         for (int i = 0; i < 4; i++) {
-            commands << "execute store result storage llvm2mc:llvm2mc args.ptr int 1 run scoreboard players get ptr register\n";
-            commands << "execute store result storage llvm2mc:llvm2mc store int 1 run scoreboard players get store register\n";
+            commands << (ptrBoard >> argsPtrField);
+            commands << (storeBoard >> storeField);
             commands << "function llvm2mc:_store with storage llvm2mc:llvm2mc args\n";
-            commands << "scoreboard players add ptr register 1\n";
-            commands << "scoreboard players operation store register /= 256 const\n";
+            commands << (ptrBoard + 1);
+            commands << (storeBoard / 256);
         }
     } else if (type->isIntegerTy() && type->getIntegerBitWidth() == 16) {
-        commands << "execute store result score store register run data get llvm2mc:llvm2mc store\n";
-        commands << "execute store result score ptr register run data get llvm2mc:llvm2mc "
-                 << valueToString(ptr) << "\n";
+        commands << (storeField >> storeBoard);
+        commands << (ptrField >> ptrBoard);
         for (int i = 0; i < 2; i++) {
-            commands << "execute store result storage llvm2mc:llvm2mc args.ptr int 1 run scoreboard players get ptr register\n";
-            commands << "execute store result storage llvm2mc:llvm2mc store int 1 run scoreboard players get store register\n";
+            commands << (ptrBoard >> argsPtrField);
+            commands << (storeBoard >> storeField);
             commands << "function llvm2mc:_store with storage llvm2mc:llvm2mc args\n";
-            commands << "scoreboard players add ptr register 1\n";
-            commands << "scoreboard players operation store register /= 256 const\n";
+            commands << (ptrBoard + 1);
+            commands << (storeBoard / 256);
         }
     } else if (type->isIntegerTy() && (type->getIntegerBitWidth() == 8 || type->getIntegerBitWidth() == 1)) {
-        commands << "data modify storage llvm2mc:llvm2mc args.ptr set from " << valueToString(ptr) << "\n";
+        commands << (ptrField >> argsPtrField);
         commands << "function llvm2mc:_store with storage llvm2mc:llvm2mc args\n";
     } else {
         throw std::invalid_argument("Invalid type");

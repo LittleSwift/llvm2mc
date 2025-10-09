@@ -12,62 +12,52 @@ inline bool is64(const llvm::Instruction &inst) {
 inline std::string handleBinaryOperator(const llvm::Function &func, const llvm::BinaryOperator &inst) {
     std::ostringstream commands;
     switch (inst.getOpcode()) {
-        case llvm::Instruction::Add:
+        case llvm::Instruction::Add: {
+            DataField operand1(inst.getOperand(0));
+            DataField operand2(inst.getOperand(1));
+            DataField result(inst);
             if (is64(inst)) {
+                ScoreField arg1lo("arg1lo", "register");
+                ScoreField arg1hi("arg1hi", "register");
+                ScoreField arg2lo("arg2lo", "register");
+                ScoreField arg2hi("arg2hi", "register");
+                ScoreField carry("carry", "register");
                 if (llvm::isa<llvm::Constant>(inst.getOperand(0))) {
-                    commands << "scoreboard players set arg1lo register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLoBits(32).getLimitedValue()
-                             << "\n";
-                    commands << "scoreboard players set arg1hi register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getHiBits(32).getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLoBits(32).getLimitedValue() >> arg1lo);
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getHiBits(32).getLimitedValue() >> arg1hi);
                 } else {
-                    commands << "execute store result score arg1lo register run data get llvm2mc:llvm2mc llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(0)) << "[0]\n";
-                    commands << "execute store result score arg1hi register run data get llvm2mc:llvm2mc llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(0)) << "[1]\n";
+                    commands << (operand1[0] >> arg1lo);
+                    commands << (operand1[1] >> arg1hi);
                 }
                 if (llvm::isa<llvm::Constant>(inst.getOperand(1))) {
-                    commands << "scoreboard players set arg2lo register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLoBits(32).getLimitedValue()
-                             << "\n";
-                    commands << "scoreboard players set arg2hi register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getHiBits(32).getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLoBits(32).getLimitedValue() >> arg2lo);
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getHiBits(32).getLimitedValue() >> arg2hi);
                 } else {
-                    commands << "execute store result score arg2lo register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(1)) << "[0]\n";
-                    commands << "execute store result score arg2hi register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(1)) << "[1]\n";
+                    commands << (operand2[0] >> arg2lo);
+                    commands << (operand2[1] >> arg2hi);
                 }
-                commands << "scoreboard players set carry register 0\n";
-                commands << "scoreboard players operation arg1lo register += arg2lo register\n";
-                commands << "execute if arg1lo register < arg2lo register run scoreboard players set carry 1\n";
-                commands << "scoreboard players operation arg1hi register += arg2hi register\n";
-                commands << "scoreboard players operation arg1hi register += carry register\n";
+                commands << (0 >> carry);
+                commands << (arg1lo + arg2lo);
+                commands << "execute if arg1lo register < arg2lo register run " << (1 >> carry);
+                commands << (arg1hi + arg2hi);
+                commands << (arg1hi + carry);
                 commands << "data modify llvm2mc:llvm2mc " << valueToString(inst) << " set {}\n";
-                commands << "execute store result storage llvm2mc:llvm2mc " << valueToString(inst)
-                         << "[0] int 1 run scoreboard players get arg1lo register\n";
-                commands << "execute store result storage llvm2mc:llvm2mc " << valueToString(inst)
-                         << "[1] int 1 run scoreboard players get arg1hi register\n";
+                commands << (arg1lo >> result[0]);
+                commands << (arg1hi >> result[1]);
             } else {
+                ScoreField arg1("arg1", "register");
+                ScoreField arg2("arg2", "register");
                 if (llvm::isa<llvm::Constant>(inst.getOperand(0))) {
-                    commands << "scoreboard players set arg1 register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLimitedValue() >> arg1);
                 } else {
-                    commands << "execute store result score arg1 register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(0)) << "\n";
+                    commands << (operand1 >> arg1);
                 }
                 if (llvm::isa<llvm::Constant>(inst.getOperand(1))) {
-                    commands << "scoreboard players set arg2 register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLimitedValue() >> arg2);
                 } else {
-                    commands << "execute store result score arg2 register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(1)) << "\n";
+                    commands << (operand2 >> arg2);
                 }
-                commands << "scoreboard players operation arg1 register += arg2 register\n";
+                commands << (arg1 + arg2);
                 std::string type;
                 switch (inst.getType()->getIntegerBitWidth()) {
                     case 1:
@@ -80,67 +70,60 @@ inline std::string handleBinaryOperator(const llvm::Function &func, const llvm::
                          << " " << type << " 1 run scoreboard players get arg1 register\n";
             }
             break;
-        case llvm::Instruction::Sub:
+        }
+        case llvm::Instruction::Sub: {
+            DataField operand1(inst.getOperand(0));
+            DataField operand2(inst.getOperand(1));
+            DataField result(inst);
             if (is64(inst)) {
+                ScoreField arg1lo("arg1lo", "register");
+                ScoreField arg1hi("arg1hi", "register");
+                ScoreField arg2lo("arg2lo", "register");
+                ScoreField arg2hi("arg2hi", "register");
+                ScoreField arg2lot("arg2lot", "register");
+                ScoreField arg2hit("arg2hit", "register");
+                ScoreField carry("carry", "register");
                 if (llvm::isa<llvm::Constant>(inst.getOperand(0))) {
-                    commands << "scoreboard players set arg1lo register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLoBits(32).getLimitedValue()
-                             << "\n";
-                    commands << "scoreboard players set arg1hi register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getHiBits(32).getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLoBits(32).getLimitedValue() >> arg1lo);
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getHiBits(32).getLimitedValue() >> arg1hi);
                 } else {
-                    commands << "execute store result score arg1lo register run data get llvm2mc:llvm2mc llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(0)) << "[0]\n";
-                    commands << "execute store result score arg1hi register run data get llvm2mc:llvm2mc llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(0)) << "[1]\n";
+                    commands << (operand1[0] >> arg1lo);
+                    commands << (operand1[1] >> arg1hi);
                 }
                 if (llvm::isa<llvm::Constant>(inst.getOperand(1))) {
-                    commands << "scoreboard players set arg2lot register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLoBits(32).getLimitedValue()
-                             << "\n";
-                    commands << "scoreboard players set arg2hit register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getHiBits(32).getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLoBits(32).getLimitedValue() >> arg2lot);
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getHiBits(32).getLimitedValue() >> arg2hit);
                 } else {
-                    commands << "execute store result score arg2lot register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(1)) << "[0]\n";
-                    commands << "execute store result score arg2hit register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(1)) << "[1]\n";
+                    commands << (operand2[0] >> arg2lot);
+                    commands << (operand2[1] >> arg2hit);
                 }
-                commands << "scoreboard players set arg2lo register 0\n";
-                commands << "scoreboard players set arg2hi register 0\n";
-                commands << "scoreboard players set carry register 0\n";
-                commands << "scoreboard players operation arg2lo register -= arg2lot register\n";
-                commands << "scoreboard players operation arg2hi register -= arg2hit register\n";
-                commands << "execute if score arg2lo register != 0 const run scoreboard players add arg2hi -1\n";
-                commands << "scoreboard players operation arg1lo register += arg2lo register\n";
-                commands << "execute if arg1lo register < arg2lo register run scoreboard players set carry 1\n";
-                commands << "scoreboard players operation arg1hi register += arg2hi register\n";
-                commands << "scoreboard players operation arg1hi register += carry register\n";
+                commands << (0 >> arg2lo);
+                commands << (0 >> arg2hi);
+                commands << (0 >> carry);
+                commands << (arg2lo - arg2lot);
+                commands << (arg2hi - arg2hit);
+                commands << "execute if score arg2lo register != 0 const run " << (arg2hi - 1);
+                commands << (arg1lo + arg2lo);
+                commands << "execute if arg1lo register < arg2lo register run " << (1 >> carry);
+                commands << (arg1hi + arg2hi);
+                commands << (arg1hi + carry);
                 commands << "data modify llvm2mc:llvm2mc " << valueToString(inst) << " set {}\n";
-                commands << "execute store result storage llvm2mc:llvm2mc " << valueToString(inst)
-                         << "[0] int 1 run scoreboard players get arg1lo register\n";
-                commands << "execute store result storage llvm2mc:llvm2mc " << valueToString(inst)
-                         << "[1] int 1 run scoreboard players get arg1hi register\n";
+                commands << (arg1lo >> result[0]);
+                commands << (arg1hi >> result[1]);
             } else {
+                ScoreField arg1("arg1", "register");
+                ScoreField arg2("arg2", "register");
                 if (llvm::isa<llvm::Constant>(inst.getOperand(0))) {
-                    commands << "scoreboard players set arg1 register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(0))->getValue().getLimitedValue() >> arg1);
                 } else {
-                    commands << "execute store result score arg1 register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(0)) << "\n";
+                    commands << (operand1 >> arg1);
                 }
                 if (llvm::isa<llvm::Constant>(inst.getOperand(1))) {
-                    commands << "scoreboard players set arg2 register "
-                             << llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLimitedValue()
-                             << "\n";
+                    commands << (llvm::cast<llvm::ConstantInt>(inst.getOperand(1))->getValue().getLimitedValue() >> arg2);
                 } else {
-                    commands << "execute store result score arg2 register run data get llvm2mc:llvm2mc "
-                             << valueToString(inst.getOperand(1)) << "\n";
+                    commands << (operand2 >> arg2);
                 }
-                commands << "scoreboard players operation arg1 register -= arg2 register\n";
+                commands << (arg1 - arg2);
                 std::string type;
                 switch (inst.getType()->getIntegerBitWidth()) {
                     case 1:
@@ -153,6 +136,7 @@ inline std::string handleBinaryOperator(const llvm::Function &func, const llvm::
                          << " " << type << " 1 run scoreboard players get arg1 register\n";
             }
             break;
+        }
         default:
             throw std::runtime_error("Unknown opcode " + std::string(inst.getOpcodeName()));
     }
