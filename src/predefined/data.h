@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <llvm/IR/Value.h>
 
 #include "data.h"
 #include "../const.h"
@@ -14,12 +13,8 @@ private:
     std::string path;
 public:
     explicit DataField(const std::string& path) : path(path) {}
-    explicit DataField(const llvm::Value& value) {
-        path = valueToString(value);
-    }
-    explicit DataField(const llvm::Value* value) {
-        path = valueToString(value);
-    }
+    explicit DataField(const llvm::Value& value) : path(valueToString(value)){}
+    explicit DataField(const llvm::Value* value) : path(valueToString(value)){}
     std::string operator>>(const DataField& field) const {
         return "data modify storage " + projectNamespace + " " + field.path
                 + " set from " + projectNamespace + " " + path + "\n";
