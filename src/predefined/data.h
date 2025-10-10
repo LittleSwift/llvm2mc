@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
+#include <utility>
 
 #include "data.h"
 #include "../const.h"
+#include "../utils/constConversion.h"
 #include "../utils/misc.h"
 #include "../utils/valueConversion.h"
 
@@ -12,7 +14,7 @@ class DataField {
 private:
     std::string path;
 public:
-    explicit DataField(const std::string& path) : path(path) {}
+    explicit DataField(std::string path) : path(std::move(path)) {}
     explicit DataField(const llvm::Value& value) : path(valueToString(value)){}
     explicit DataField(const llvm::Value* value) : path(valueToString(value)){}
     std::string operator>>(const DataField& field) const {
@@ -21,6 +23,16 @@ public:
     }
 
     std::string operator>>(const ScoreField &scoreField) const;
+
+    friend std::string operator>>(const std::string& value, const DataField& field) {
+        return "data modify storage " + projectNamespace + " " + field.path
+                + " set value " + value + "\n";
+    }
+
+    friend std::string operator>>(const llvm::Constant& value, const DataField& field) {
+        return "data modify storage " + projectNamespace + " " + field.path
+                + " set value " + constantToString(value) + "\n";
+    }
 
     DataField operator[](const int &arg) const {
         DataField result(*this);
@@ -36,7 +48,7 @@ private:
     std::string name;
     std::string board;
 public:
-    explicit ScoreField(const std::string& name, const std::string& board) : name(name), board(board) {}
+    explicit ScoreField(std::string name, std::string board) : name(std::move(name)), board(std::move(board)) {}
 
     std::string operator>>(const DataField& field) const {
         return "execute store result storage " + projectNamespace + " " + field.path

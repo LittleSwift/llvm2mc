@@ -18,6 +18,7 @@
 #include "instructions/alloca.h"
 #include "instructions/binaryOperator.h"
 #include "instructions/br.h"
+#include "instructions/load.h"
 #include "instructions/ret.h"
 #include "instructions/store.h"
 
@@ -88,6 +89,9 @@ int main(int argc, char **argv) {
                 }
                 if (auto* cInst = llvm::dyn_cast<llvm::BinaryOperator>(&inst)) {
                     blockFile << handleBinaryOperator(func, *cInst);
+                }
+                if (auto* cInst = llvm::dyn_cast<llvm::LoadInst>(&inst)) {
+                    blockFile << handleLoad(func, *cInst);
                 }
                 if (auto* cInst = llvm::dyn_cast<llvm::ReturnInst>(&inst)) {
                     blockFile << handleRet(func, *cInst);

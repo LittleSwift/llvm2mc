@@ -1,5 +1,5 @@
 # llvm2mc
-![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-9.1%25-yellow)
+![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-10.6%25-yellow)
 ![Command Coverage](https://img.shields.io/badge/Command%20Coverage-0%25-red)
 
 **llvm2mc** is a project that compiles LLVM IR into a Minecraft datapack. It translates LLVM instructions into Minecraft functions, enabling you to run LLVM-based programs inside Minecraft.
@@ -83,7 +83,7 @@ We are currently working on supporting Clang IR subset of LLVM IR, which is much
 <summary>Memory Access and Addressing Operations</summary>
 
 - [x] `alloca` Instruction
-- [ ] `load` Instruction
+- [x] `load` Instruction (Clang IR subset)
 - [x] `store` Instruction (Clang IR subset)
 - [ ] `fence` Instruction
 - [ ] `cmpxchg` Instruction

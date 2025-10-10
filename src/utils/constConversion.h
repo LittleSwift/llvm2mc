@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 #include <sstream>
 #include <llvm/IR/Constants.h>
@@ -85,4 +84,8 @@ inline std::string constantToString(const llvm::Constant *C) {
     }
 
     throw std::runtime_error("Unexpected type of constant");
+}
+
+inline std::string constantToString(const llvm::Constant& C) {
+    return aggregateToString(&C);
 }
