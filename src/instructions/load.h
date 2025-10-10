@@ -5,6 +5,7 @@
 #include <llvm/IR/Value.h>
 
 #include "../predefined/data.h"
+#include "../utils/misc.h"
 
 inline void emitLoadLoop(std::ostringstream& commands,
                           const ScoreField& ptrBoard,
@@ -21,26 +22,6 @@ inline void emitLoadLoop(std::ostringstream& commands,
         commands << (loadBoard + tmpBoard);
         commands << (ptrBoard + 1);
     }
-}
-
-inline bool is64BitType(const llvm::Type* type) {
-    return (type->isIntegerTy() && type->getIntegerBitWidth() == 64) ||
-           type->isDoubleTy();
-}
-
-inline bool is32BitType(const llvm::Type* type) {
-    return type->isPointerTy() ||
-           (type->isIntegerTy() && type->getIntegerBitWidth() == 32) ||
-           type->isFloatTy();
-}
-
-inline bool is16BitType(const llvm::Type* type) {
-    return type->isIntegerTy() && type->getIntegerBitWidth() == 16;
-}
-
-inline bool is8BitType(const llvm::Type* type) {
-    return type->isIntegerTy() &&
-           (type->getIntegerBitWidth() == 8 || type->getIntegerBitWidth() == 1);
 }
 
 inline std::string handleLoad(const llvm::Function &func, const llvm::LoadInst &inst) {
