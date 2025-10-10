@@ -50,7 +50,7 @@ inline std::string constantToString(const llvm::Constant *C) {
             case 1:
             case 8:  oss << "b"; break;
             case 16: oss << "s"; break;
-            case 32: oss << "i"; break;
+            case 32: oss << ""; break;
             default: throw std::runtime_error("Unsupported integer width");
         }
         return oss.str();

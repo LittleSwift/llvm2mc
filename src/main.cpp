@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
             + standardizeName(func.getName().str()) + ".mcfunction");
         funcFile << "execute store result storage llvm2mc:llvm2mc stack[-1].stackTop int 1 "
                     "run scoreboard players get stackTop register\n";
-        funcFile << "function " << standardizeName(func.getName().str()) << "/0" << "\n";
+        funcFile << "function llvm2mc:" << standardizeName(func.getName().str()) << "/0" << "\n";
         funcFile << "execute store result score stackTop register run "
                     "data get storage llvm2mc:llvm2mc stack[-1].stackTop\n";
         for (auto &bb : func) {

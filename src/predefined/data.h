@@ -19,7 +19,7 @@ public:
     explicit DataField(const llvm::Value* value) : path(valueToString(value)){}
     std::string operator>>(const DataField& field) const {
         return "data modify storage " + projectNamespace + " " + field.path
-                + " set from " + projectNamespace + " " + path + "\n";
+                + " set from storage " + projectNamespace + " " + path + "\n";
     }
 
     std::string operator>>(const ScoreField &scoreField) const;
@@ -99,5 +99,5 @@ public:
 
 inline std::string DataField::operator>>(const ScoreField& scoreField) const {
     return "execute store result score " + scoreField.name + " " + scoreField.board
-            + " run data get " + projectNamespace + " " + path + "\n";
+            + " run data get storage " + projectNamespace + " " + path + "\n";
 }
