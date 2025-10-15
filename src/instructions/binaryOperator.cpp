@@ -42,10 +42,10 @@ std::string handleBinaryOperator(const llvm::Function &func, const llvm::BinaryO
                 }
                 commands << (0 >> carry);
                 commands << (arg1lo + arg2lo);
-                commands << "execute if arg1lo register < arg2lo register run " << (1 >> carry);
+                commands << "execute if score arg1lo register < arg2lo register run " << (1 >> carry);
                 commands << (arg1hi + arg2hi);
                 commands << (arg1hi + carry);
-                commands << "data modify llvm2mc:llvm2mc " << valueToString(inst) << " set {}\n";
+                commands << "data modify storage llvm2mc:llvm2mc " << valueToString(inst) << " set value [0,0]\n";
                 commands << (arg1lo >> result[0]);
                 commands << (arg1hi >> result[1]);
             } else {
@@ -108,10 +108,10 @@ std::string handleBinaryOperator(const llvm::Function &func, const llvm::BinaryO
                 commands << (arg2hi - arg2hit);
                 commands << "execute if score arg2lo register != 0 const run " << (arg2hi - 1);
                 commands << (arg1lo + arg2lo);
-                commands << "execute if arg1lo register < arg2lo register run " << (1 >> carry);
+                commands << "execute if score arg1lo register < arg2lo register run " << (1 >> carry);
                 commands << (arg1hi + arg2hi);
                 commands << (arg1hi + carry);
-                commands << "data modify llvm2mc:llvm2mc " << valueToString(inst) << " set {}\n";
+                commands << "data modify storage llvm2mc:llvm2mc " << valueToString(inst) << " set value [0,0]\n";
                 commands << (arg1lo >> result[0]);
                 commands << (arg1hi >> result[1]);
             } else {

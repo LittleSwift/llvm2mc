@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "const.h"
 #include "prepare.h"
 #include "utils/stringUtils.h"
 #include "instructions/alloca.h"
@@ -21,6 +22,9 @@
 #include "instructions/load.h"
 #include "instructions/ret.h"
 #include "instructions/store.h"
+#include "instructions/trunc.h"
+#include "predefined/data.h"
+#include "utils/misc.h"
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -81,6 +85,9 @@ int main(int argc, char **argv) {
                 + standardizeName(func.getName().str()) + "/"
                 + std::to_string(bb.getNumber()) + ".mcfunction");
             for (auto &inst : bb) {
+                if (debug) {
+                    blockFile << R"(tellraw @a {"type":"text", "color":"yellow", "text":")" << escapeQuotes(instructionToString(&inst)) << "\"}\n";
+                }
                 if (auto* cInst = llvm::dyn_cast<llvm::AllocaInst>(&inst)) {
                     blockFile << handleAlloca(func, *cInst);
                 }
@@ -98,6 +105,14 @@ int main(int argc, char **argv) {
                 }
                 if (auto* cInst = llvm::dyn_cast<llvm::StoreInst>(&inst)) {
                     blockFile << handleStore(func, *cInst);
+                }
+                if (auto* cInst = llvm::dyn_cast<llvm::TruncInst>(&inst)) {
+                    blockFile << handleTrunc(func, *cInst);
+                }
+                if (debug && inst.getNameOrAsOperand() != "<badref>") {
+                    blockFile << R"(tellraw @a {"type":"text", "color":"yellow", "text":")"
+                              << inst.getNameOrAsOperand() << R"(=", "extra":[{"storage":")" << projectNamespace
+                              << R"(", "nbt":")" << DataField(inst) << "\"}]}\n";
                 }
             }
             blockFile.close();

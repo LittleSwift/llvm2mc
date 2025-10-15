@@ -5,6 +5,7 @@
 #include <llvm/IR/Constants.h>
 #include <llvm/IR/DerivedTypes.h>
 #include <cstring>
+#include <iostream>
 
 static std::string aggregateToString(const llvm::Constant *C) {
     std::ostringstream oss;
@@ -18,17 +19,17 @@ static std::string aggregateToString(const llvm::Constant *C) {
     return oss.str();
 }
 
-static std::string i32ToString(uint32_t val) {
-    return std::to_string(static_cast<int32_t>(val)) + "i";
+static std::string i32ToString(const uint32_t val) {
+    return std::to_string(static_cast<int32_t>(val));
 }
 
 std::string constantToString(const llvm::Constant *C) {
     if (!C) {
-        return "0i";
+        return "0";
     }
 
     if (llvm::isa<llvm::ConstantPointerNull>(C) || llvm::isa<llvm::UndefValue>(C)) {
-        return "0i";
+        return "0";
     }
 
     if (auto *CI = llvm::dyn_cast<llvm::ConstantInt>(C)) {

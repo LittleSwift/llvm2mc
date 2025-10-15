@@ -15,6 +15,7 @@ public:
     std::string operator>>(const ScoreField &scoreField) const;
     friend std::string operator>>(const std::string& value, const DataField& field);
     friend std::string operator>>(const llvm::Constant& value, const DataField& field);
+    friend std::ostream& operator<<(std::ostream& os, const DataField& field);
     DataField operator[](const int &arg) const;
 
     friend class ScoreField;

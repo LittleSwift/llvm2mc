@@ -19,8 +19,10 @@ static void emitLoadLoop(std::ostringstream& commands,
         commands << (ptrBoard >> argsPtrField);
         commands << "function llvm2mc:_load with storage llvm2mc:llvm2mc args\n";
         commands << (loadField >> tmpBoard);
+        commands << (tmpBoard + 256);
+        commands << (tmpBoard % 256);
         commands << (loadBoard + tmpBoard);
-        commands << (ptrBoard + 1);
+        commands << (ptrBoard - 1);
     }
 }
 
@@ -41,21 +43,24 @@ std::string handleLoad(const llvm::Function &func, const llvm::LoadInst &inst) {
     commands << (ptrField >> ptrBoard);
 
     if (is64BitType(type)) {
-        commands << ("[]" >> resultField);
+        commands << ("[0,0]" >> resultField);
         commands << (ptrField >> ptrBoard);
-        commands << (0 >> loadBoard);
-        emitLoadLoop(commands, ptrBoard, loadBoard, argsPtrField, loadField, tmpBoard, 4);
-        commands << (loadBoard >> resultField[0]);
+        commands << (ptrBoard + 7);
         commands << (0 >> loadBoard);
         emitLoadLoop(commands, ptrBoard, loadBoard, argsPtrField, loadField, tmpBoard, 4);
         commands << (loadBoard >> resultField[1]);
+        commands << (0 >> loadBoard);
+        emitLoadLoop(commands, ptrBoard, loadBoard, argsPtrField, loadField, tmpBoard, 4);
+        commands << (loadBoard >> resultField[0]);
     } else if (is32BitType(type)) {
         commands << (ptrField >> ptrBoard);
+        commands << (ptrBoard + 3);
         commands << (0 >> loadBoard);
         emitLoadLoop(commands, ptrBoard, loadBoard, argsPtrField, loadField, tmpBoard, 4);
         commands << (loadBoard >> resultField);
     } else if (is16BitType(type)) {
         commands << (ptrField >> ptrBoard);
+        commands << (ptrBoard + 1);
         commands << (0 >> loadBoard);
         emitLoadLoop(commands, ptrBoard, loadBoard, argsPtrField, loadField, tmpBoard, 2);
         commands << (loadBoard >> resultField);

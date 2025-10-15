@@ -1,5 +1,6 @@
 #pragma once
 
+#include <llvm/IR/Instruction.h>
 #include <llvm/IR/Type.h>
 #include "../const.h"
 
@@ -14,3 +15,5 @@ bool is64BitType(const llvm::Type* type);
 bool is32BitType(const llvm::Type* type);
 bool is16BitType(const llvm::Type* type);
 bool is8BitType(const llvm::Type* type);
+
+std::string instructionToString(const llvm::Instruction* inst);

@@ -32,7 +32,7 @@ void prepare() {
 
     std::ofstream storeFile("output/_store.mcfunction");
     if (debug) {
-        entryFile << "tellraw @a {\"text\":\"Store $(ptr): \",\"extra\":[{\"storage\":\""
+        entryFile << R"(tellraw @a {"text":"Store $(ptr): ","extra":[{"storage":")"
                   << projectNamespace <<"\",\"nbt\":\"store\"}]}\n";
     }
     storeFile << "$execute store result storage " << projectNamespace << " memory[$(ptr)] byte 1 run data get storage " << projectNamespace << " store\n";
@@ -41,7 +41,7 @@ void prepare() {
     std::ofstream loadFile("output/_load.mcfunction");
     loadFile << "$execute store result storage " << projectNamespace << " load int 1 run data get storage " << projectNamespace << " memory[$(ptr)]\n";
     if (debug) {
-        entryFile << "tellraw @a {\"text\":\"Load $(ptr): \",\"extra\":[{\"storage\":\""
+        entryFile << R"(tellraw @a {"text":"Load $(ptr): ","extra":[{"storage":")"
                   << projectNamespace <<"\",\"nbt\":\"load\"}]}\n";
     }
     storeFile.close();

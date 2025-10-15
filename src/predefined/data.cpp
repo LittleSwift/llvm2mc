@@ -37,6 +37,11 @@ std::string operator>>(const llvm::Constant& value, const DataField& field) {
            + " set value " + constantToString(value) + "\n";
 }
 
+std::ostream& operator<<(std::ostream& os, const DataField& field) {
+    os << field.path;
+    return os;
+}
+
 ScoreField::ScoreField(std::string name, std::string board) : name(std::move(name)), board(std::move(board)) {}
 
 std::string ScoreField::operator>>(const DataField& field) const {
