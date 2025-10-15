@@ -62,6 +62,7 @@ inline std::string handleLoad(const llvm::Function &func, const llvm::LoadInst &
     } else if (is8BitType(type)) {
         commands << (ptrField >> argsPtrField);
         commands << "function llvm2mc:_load with storage llvm2mc:llvm2mc args\n";
+        commands << (loadField >> resultField);
     } else {
         throw std::invalid_argument("Invalid type for load instruction");
     }
