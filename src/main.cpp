@@ -23,6 +23,7 @@
 #include "instructions/ret.h"
 #include "instructions/store.h"
 #include "instructions/trunc.h"
+#include "instructions/zext.h"
 #include "predefined/data.h"
 #include "utils/misc.h"
 
@@ -108,6 +109,9 @@ int main(int argc, char **argv) {
                 }
                 if (auto* cInst = llvm::dyn_cast<llvm::TruncInst>(&inst)) {
                     blockFile << handleTrunc(func, *cInst);
+                }
+                if (auto* cInst = llvm::dyn_cast<llvm::ZExtInst>(&inst)) {
+                    blockFile << handleZExt(func, *cInst);
                 }
                 if (debug && inst.getNameOrAsOperand() != "<badref>") {
                     blockFile << R"(tellraw @a {"type":"text", "color":"yellow", "text":")"
