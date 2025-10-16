@@ -1,5 +1,5 @@
 # llvm2mc
-![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-13.6%25-yellow)
+![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-25.8%25-yellow)
 ![Command Coverage](https://img.shields.io/badge/Command%20Coverage-0%25-red)
 
 **llvm2mc** is a project that compiles LLVM IR into a Minecraft datapack. It translates LLVM instructions into Minecraft functions, enabling you to run LLVM-based programs inside Minecraft.
@@ -18,10 +18,10 @@ We are currently working on supporting Clang IR subset of LLVM IR, which is much
 - [ ] `invoke` Instruction
 - [ ] `callbr` Instruction
 - [ ] `resume` Instruction
-- [ ] `catchswitch` Instruction
-- [ ] `catchret` Instruction
-- [ ] `cleanupret` Instruction
-- [ ] `unreachable` Instruction
+- [x] `catchswitch` Instruction (won't implement)
+- [x] `catchret` Instruction (won't implement)
+- [x] `cleanupret` Instruction (won't implement)
+- [x] `unreachable` Instruction (won't implement)
 
 </details>
 
@@ -85,7 +85,7 @@ We are currently working on supporting Clang IR subset of LLVM IR, which is much
 - [x] `alloca` Instruction
 - [x] `load` Instruction (Clang IR subset)
 - [x] `store` Instruction (Clang IR subset)
-- [ ] `fence` Instruction
+- [x] `fence` Instruction (won't implement)
 - [ ] `cmpxchg` Instruction
 - [ ] `atomicrmw` Instruction
 - [ ] `getelementptr` Instruction
@@ -122,9 +122,9 @@ We are currently working on supporting Clang IR subset of LLVM IR, which is much
 - [ ] `freeze` Instruction
 - [ ] `call` Instruction
 - [ ] `va_arg` Instruction
-- [ ] `landingpad` Instruction
-- [ ] `catchpad` Instruction
-- [ ] `cleanuppad` Instruction
+- [x] `landingpad` Instruction (won't implement)
+- [x] `catchpad` Instruction (won't implement)
+- [x] `cleanuppad` Instruction (won't implement)
 
 </details>
 
