@@ -34,29 +34,31 @@ std::string handleStore(const llvm::Function &func, const llvm::StoreInst &inst)
     const DataField ptrField(ptr);
     const ScoreField ptrBoard("ptr", "register");
     const DataField argsPtrField("args.ptr");
+    const DataField tempField("temp");
 
     if (llvm::isa<llvm::Constant>(value)) {
-        commands << "data modify storage llvm2mc:llvm2mc store set value "
+        commands << "data modify storage llvm2mc:llvm2mc temp set value "
                  << constantToString(llvm::cast<llvm::Constant>(value)) << "\n";
     } else {
-        commands << (DataField(value) >> storeField);
+        commands << (DataField(value) >> tempField);
     }
 
     if (is64BitType(type)) {
-        commands << (storeField[0] >> storeBoard);
+        commands << (tempField[0] >> storeBoard);
         commands << (ptrField >> ptrBoard);
         emitStoreLoop(commands, ptrBoard, storeBoard, argsPtrField, storeField, 4);
-        commands << (storeField[1] >> storeBoard);
+        commands << (tempField[1] >> storeBoard);
         emitStoreLoop(commands, ptrBoard, storeBoard, argsPtrField, storeField, 4);
     } else if (is32BitType(type)) {
-        commands << (storeField >> storeBoard);
+        commands << (tempField >> storeBoard);
         commands << (ptrField >> ptrBoard);
         emitStoreLoop(commands, ptrBoard, storeBoard, argsPtrField, storeField, 4);
     } else if (is16BitType(type)) {
-        commands << (storeField >> storeBoard);
+        commands << (tempField >> storeBoard);
         commands << (ptrField >> ptrBoard);
         emitStoreLoop(commands, ptrBoard, storeBoard, argsPtrField, storeField, 2);
     } else if (is8BitType(type)) {
+        commands << (tempField >> storeField);
         commands << (ptrField >> argsPtrField);
         commands << "function llvm2mc:_store with storage llvm2mc:llvm2mc args\n";
     } else {
