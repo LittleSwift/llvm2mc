@@ -1,5 +1,5 @@
 # llvm2mc
-![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-25.8%25-yellow)
+![Instruction Coverage](https://img.shields.io/badge/Instruction%20Coverage-28.8%25-yellow)
 ![Command Coverage](https://img.shields.io/badge/Command%20Coverage-0%25-red)
 
 **llvm2mc** is a project that compiles LLVM IR into a Minecraft datapack. It translates LLVM instructions into Minecraft functions, enabling you to run LLVM-based programs inside Minecraft.
@@ -104,9 +104,9 @@ We are currently working on supporting Clang IR subset of LLVM IR, which is much
 - [ ] `fptosi .. to` Instruction
 - [ ] `uitofp .. to` Instruction
 - [ ] `sitofp .. to` Instruction
-- [ ] `ptrtoint .. to` Instruction
+- [x] `ptrtoint .. to` Instruction
 - [ ] `ptrtoaddr .. to` Instruction
-- [ ] `inttoptr .. to` Instruction
+- [x] `inttoptr .. to` Instruction
 - [ ] `bitcast .. to` Instruction
 - [ ] `addrspacecast .. to` Instruction
 

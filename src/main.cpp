@@ -19,7 +19,9 @@
 #include "instructions/alloca.h"
 #include "instructions/binaryOperator.h"
 #include "instructions/br.h"
+#include "instructions/inttoptr.h"
 #include "instructions/load.h"
+#include "instructions/ptrtoint.h"
 #include "instructions/ret.h"
 #include "instructions/store.h"
 #include "instructions/trunc.h"
@@ -98,8 +100,14 @@ int main(int argc, char **argv) {
                 if (auto* cInst = llvm::dyn_cast<llvm::BinaryOperator>(&inst)) {
                     blockFile << handleBinaryOperator(func, *cInst);
                 }
+                if (auto *cInst = llvm::dyn_cast<llvm::IntToPtrInst>(&inst)) {
+                    blockFile << handleIntToPtr(func, *cInst);
+                }
                 if (auto* cInst = llvm::dyn_cast<llvm::LoadInst>(&inst)) {
                     blockFile << handleLoad(func, *cInst);
+                }
+                if (auto *cInst = llvm::dyn_cast<llvm::PtrToIntInst>(&inst)) {
+                    blockFile << handlePtrToInt(func, *cInst);
                 }
                 if (auto* cInst = llvm::dyn_cast<llvm::ReturnInst>(&inst)) {
                     blockFile << handleRet(func, *cInst);
