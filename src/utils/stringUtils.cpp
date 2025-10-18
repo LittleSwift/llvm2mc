@@ -1,5 +1,6 @@
 #include "stringUtils.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -35,8 +36,8 @@ std::string safeName(const std::string& name) {
 }
 
 std::string standardizeName(std::string name) {
-    name = safeName(name);
-    std::ranges::transform(name, name.begin(),
+    std::string result;
+    std::ranges::transform(name, result.begin(),
                            [](const unsigned char c){ return std::tolower(c); });
     return name;
 }

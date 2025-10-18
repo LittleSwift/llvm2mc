@@ -9,6 +9,7 @@ target_link_libraries(llvm2mc PRIVATE LLVMCore LLVMBitReader LLVMIRReader)
 find_package(OpenSSL REQUIRED)
 target_include_directories(llvm2mc PRIVATE ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(llvm2mc PRIVATE ${OPENSSL_LIBRARIES})
+target_compile_options(llvm2mc PRIVATE -Wno-c23-extensions)
 
 install(TARGETS llvm2mc
         RUNTIME DESTINATION bin

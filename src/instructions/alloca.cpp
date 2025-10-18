@@ -13,8 +13,5 @@ std::string handleAlloca(const llvm::Function &func, const llvm::AllocaInst &ins
     const ScoreField stackTop("stackTop", "register");
     commands << (stackTop >> DataField(inst));
     commands << (stackTop + inst.getAllocationSize(inst.getDataLayout()).value());
-    if (debug) {
-        commands << "execute if score stackTop register > stackSize register run " << mAbort("Reached max stack size.");
-    }
     return commands.str();
 }

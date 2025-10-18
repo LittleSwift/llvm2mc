@@ -2,6 +2,7 @@
 
 #include <llvm/IR/Instruction.h>
 #include <llvm/IR/Type.h>
+#include <llvm/IR/DerivedTypes.h>
 
 bool is64BitType(const llvm::Type* type) {
     return (type->isIntegerTy() && type->getIntegerBitWidth() == 64) ||
